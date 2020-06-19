@@ -2,6 +2,6 @@ from .views import ind
 from django.urls import path
 
 urlpatterns = [
-    path('',ind),
+    path('',ind,name='home'),
 #     path('mail/',index),
  ]
