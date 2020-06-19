@@ -114,7 +114,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
 # import getpass
 # passwd=getpass.getpass()
 # EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
