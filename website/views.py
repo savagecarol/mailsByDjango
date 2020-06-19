@@ -22,7 +22,7 @@ class MyView(View):
 
 class Threading(object):
     def __init__(self):
-        self.interval=2
+        self.interval=7200
         thread=threading.Thread(target=self.run,args=())
         thread.daemon=True
         thread.start()
