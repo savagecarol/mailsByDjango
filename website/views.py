@@ -4,20 +4,64 @@ from django.conf import settings
 from .models import Info
 from django.views import View
 import threading
-
-
+from datetime import date
+import time
 class MyView(View):
-
     def get(self, request, *args, **kwargs):
         return render(request, 'website/index.html')
-
     def post(self, request, *args, **kwargs):
         email = request.POST.get('email')
+        subject=request.POST.get('subject')
         text = request.POST.get('text')
         date = request.POST.get('date')
-        c = Info(email=email, text=text, date=date)
+        c = Info(email=email, subject=subject,text=text, date=date)
         c.save()
         return render(request, 'website/index.html')
+
+
+
+class Threading(object):
+    def __init__(self):
+        self.interval=2
+        thread=threading.Thread(target=self.run,args=())
+        thread.daemon=True
+        thread.start()
+    def run(self):
+        while(True):
+            today = date.today()
+            print(Info.objects.all())
+            k = Info.objects.filter(date=today)
+            print(k)
+            for i in k:
+                send_mail(
+                        i.subject,
+                        i.text,
+                        settings.EMAIL_HOST_USER,
+                        [i.email],
+                        fail_silently=False,
+                        )
+                print(i.email)
+            Info.objects.filter(date=today).delete()
+            print(Info.objects.all())
+            time.sleep(self.interval)
+
+example = Threading()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #
 # def ind(request):
@@ -42,12 +86,4 @@ class MyView(View):
 #     )
 #     return HttpResponse("mail has been send")
 
-# def job():
-#     print("Reading time..")
-#
-#
-# schedule.every(10).seconds.do(job)
-# while(True):
-#     schedule.run_pending()
-#     time.sleep(1)
-#
+
